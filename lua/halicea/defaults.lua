@@ -1,8 +1,9 @@
 local o = vim.opt
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+local g = vim.g
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
+g.mapleader = " "
+g.maplocalleader = "\\"
 o.termguicolors=true
 o.exrc = true
 o.number = false
@@ -19,7 +20,9 @@ o.smartcase=true
 
 o.swapfile = false
 o.backup = false
-o.undodir = os.getenv("HOME") .. "/.vim/undodir"
+if os.getenv("HOME") then
+    o.undodir = os.getenv("HOME") .. "/.vim/undodir"
+end
 o.undofile = true
 o.incsearch = true
 o.scrolloff = 8
@@ -53,4 +56,3 @@ o.winbar='%f\\ %y%m'
 o.ls = 0
 o.ch = 0
 o.laststatus=3
-

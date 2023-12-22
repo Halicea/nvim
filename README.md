@@ -1,17 +1,5 @@
 # Neovim config
-## Update (Nov 2023)
-After a pleasing 2023 with my previous lua config, a new change, everyone is using Lazy.nvim now, 
-Packer is not maintained, so I need to switch again.
 
-Lazy seems much simpler, reliable and more in control over the setup flow.
-
-Once in a year, is totally ok.
-
-I am looking forward this year to see a fast LSP support for .Net as well. 
-
-Happy new year.
-
-## Previous version(Nov 2022).
 After a long time resisting to re-write my config in `Lua`, before the end of
 this(2022) year, decided to do so.
 

@@ -48,44 +48,42 @@ local lspconfig = require("lspconfig")
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 require("mason").setup({})
-require("mason-lspconfig").setup({
-    ensure_installed = {},
-    handlers = {
-        function(server)
-            local config = { capabilities = lsp_capabilities }
-            config.handlers = {
-                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-                    border = "rounded",
-                }),
+require("mason-lspconfig").setup({})
+require("mason-lspconfig").setup_handlers({
+    function(server)
+        local config = { capabilities = lsp_capabilities }
+        config.handlers = {
+            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+                border = "rounded",
+            }),
+        }
+        if (server == "omnisharp") then
+            config.handlers["textDocument/definition"] = require("omnisharp_extended").handler
+            lspconfig[server].setup(config)
+        elseif server == "lua_ls" then
+            config.Lua = {
+                runtime = {
+                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                    version = "LuaJIT",
+                },
+                diagnostics = {
+                    -- Get the language server to recognize the `vim` global
+                    globals = { "vim" },
+                },
+                workspace = {
+                    -- Make the server aware of Neovim runtime files
+                    library = vim.api.nvim_get_runtime_file("", true),
+                },
+                -- Do not send telemetry data containing a randomized but unique identifier
+                telemetry = {
+                    enable = false,
+                },
             }
-            if (server == "omnisharp") then
-                config.handlers["textDocument/definition"] = require("omnisharp_extended").handler
-                lspconfig[server].setup(config)
-            elseif server == "lua_ls" then
-                config.Lua = {
-                    runtime = {
-                        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                        version = "LuaJIT",
-                    },
-                    diagnostics = {
-                        -- Get the language server to recognize the `vim` global
-                        globals = { "vim" },
-                    },
-                    workspace = {
-                        -- Make the server aware of Neovim runtime files
-                        library = vim.api.nvim_get_runtime_file("", true),
-                    },
-                    -- Do not send telemetry data containing a randomized but unique identifier
-                    telemetry = {
-                        enable = false,
-                    },
-                }
-                lspconfig[server].setup(config)
-            else
-                lspconfig[server].setup(config)
-            end
+            lspconfig[server].setup(config)
+        else
+            lspconfig[server].setup(config)
         end
-    },
+    end
 })
 
 -- require("roslyn").setup({

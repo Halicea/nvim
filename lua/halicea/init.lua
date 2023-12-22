@@ -6,4 +6,5 @@ require("halicea.theme")
 require("halicea.keymaps")
 require("halicea.lsp")
 require("halicea.dap")
+require("halicea.noice")
 

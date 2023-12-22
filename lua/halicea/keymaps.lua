@@ -1,26 +1,29 @@
+local g = vim.g
+local api = vim.api
+local keymap = vim.keymap
+
+local wk = require("which-key")
 function Modal(name, ...)
     require("telescope.builtin")[name](require("telescope.themes").get_ivy(...))
 end
 
-local wk = require("which-key")
-
 -- Copilot swap tab since compe takes the tab key
-vim.g.copilot_no_tab_map = true
-vim.g.copilot_assume_mapped = true
-vim.keymap.set(
+g.copilot_no_tab_map = true
+g.copilot_assume_mapped = true
+keymap.set(
     "i",
     "<C-b>",
     'copilot#Accept("<Return>")',
     { noremap = true, silent = true, expr = true, replace_keycodes = false }
 )
 
-vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
-vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
-vim.keymap.set({ "n", "x" }, "<C-p>", "<Plug>(YankyCycleForward)", { noremap = false })
-vim.keymap.set({ "n", "x" }, "<C-M-p>", "<Plug>(YankyCycleBackward)", { noremap = false })
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
+keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
+keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
+keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
+keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
+keymap.set({ "n", "x" }, "<C-p>", "<Plug>(YankyCycleForward)", { noremap = false })
+keymap.set({ "n", "x" }, "<C-M-p>", "<Plug>(YankyCycleBackward)", { noremap = false })
+keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 
 wk.register({
     ["<Left>"] = { "4<C-w><", "dec width" },
@@ -58,7 +61,6 @@ wk.register({
         b = { "<cmd>lua Modal('buffers')<cr>", "buffers" },
         c = { "<cmd>lua Modal('commands')<cr>", "commands" },
         C = { "<cmd>lua Modal('colorscheme')<cr>", "theme" },
-        f = { "<cmd>lua Modal('find_files')<cr>", "files" },
         f = { "<cmd>lua Modal('find_files')<cr>", "files" },
         e = { "<cmd>Telescope emoji theme=ivy<cr>", "emoji" },
         g = { "<cmd>lua Modal('live_grep')<cr>", "grep" },
@@ -135,9 +137,9 @@ wk.register({
         r = { "<cmd>e! %<cr>", "reload-current" },
         c = { "<cmd>so ~/.config/nvim/init.lua<cr>", "reload-config" },
 
-        s = {"<cmd>e ~/scratch.lua<cr>", "scratch"},
-        k = {"<cmd>e ~/.dotfiles/nvim/lua/halicea/keymaps.lua<cr>", "keymaps"},
-        p = {"<cmd>e ~/.dotfiles/nvim/lua/halicea/plugins.lua<cr>", "plugins"},
+        s = { "<cmd>e ~/scratch.lua<cr>", "scratch" },
+        k = { "<cmd>e ~/.dotfiles/nvim/lua/halicea/keymaps.lua<cr>", "keymaps" },
+        p = { "<cmd>e ~/.dotfiles/nvim/lua/halicea/plugins.lua<cr>", "plugins" },
     },
     f = {
         name = "file",
@@ -171,10 +173,10 @@ wk.register({
     j = { "<cmd>call VimuxSendCtrlKey('r')<cr>", "Ctrl-r" },
     l = {
         name = "lsp",
-        i = { "<cmd>LspInstall ", "install" },
-        k = { "<cmd>LspStop<cr>", "stop" },
-        l = { "<cmd>LspInfo<cr>", "status" },
-        s = { "<cmd>LspStart<cr>", "start" },
+        i = { "<cmd>LspInstall<CR> ", "install" },
+        k = { "<cmd>LspStop<CR>", "stop" },
+        l = { "<cmd>LspInfo<CR>", "status" },
+        s = { "<cmd>LspStart<CR>", "start" },
     },
     o = {
         name = "open",
@@ -208,6 +210,7 @@ wk.register({
         r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
         d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
         s = { "vip:<C-U>REPLSendLines<cr><esc>%", "send-paragraph" },
+        a = { "ggVG:<C-U>REPLSendLines<cr><esc>", "send-all" },
     },
     s = {
         name = "search",
@@ -218,7 +221,10 @@ wk.register({
         name = "toggles",
         z = { "<cmd>ZenMode<cr>", "zen" },
         l = { "<cmd>set nu! rnu!<cr>", "line-numbers" },
+        L = { "<cmd>set nu rnu!<cr>", "line-numbers" },
         w = { "<cmd>set wrap!<cr>", "word-wrap" },
+        i = { "<cmd>IBLToggle<cr>", "indent" },
+        h = { "<cmd>lua Modal('colorscheme')<cr>", "colorscheme" },
         b = {
             name = "background",
             l = { "<cmd><cmd>colorscheme leuven<cr>", "light" },
@@ -305,18 +311,16 @@ wk.register({
 }, { mode = "n" })
 
 -- better goto definition for csharp
-vim.api.nvim_create_autocmd(
-{
+api.nvim_create_autocmd({
     "BufNewFile",
     "BufRead",
-},
-{
-    pattern="*.cs",
+}, {
+    pattern = "*.cs",
     callback = function()
-        vim.keymap.set('n', 'gd', function()
+        keymap.set('n', 'gd', function()
             require('omnisharp_extended').lsp_definitions()
         end)
 
-        vim.keymap.set('n', 'vif', 'viW%', { noremap = true, silent = true })
+        keymap.set('n', 'vif', 'viW%', { noremap = true, silent = true })
     end,
 })

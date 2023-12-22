@@ -1,12 +1,16 @@
 local dap = require("dap")
-vim.fn.sign_define("DapBreakpoint", { text = "🧅", texthl = "", linehl = "red", numhl = "" })
-vim.fn.sign_define("DapStopped", { text = "🥝", texthl = "", linehl = "green", numhl = "" })
+local fn = vim.fn
 
+fn.sign_define("DapBreakpoint", { text = "🧅", texthl = "", linehl = "red", numhl = "" })
+fn.sign_define("DapStopped", { text = "🥝", texthl = "", linehl = "green", numhl = "" })
+
+local node_debug_path = "/home/halicea/projects/oss/vscode-node-debug2/out/src/nodeDebug.js"
 dap.adapters.node2 = {
     type = "executable",
     command = "node",
-    args = { os.getenv("HOME") .. "/projects/oss/vscode-node-debug2/out/src/nodeDebug.js" },
+    args = { node_debug_path },
 }
+
 dap.adapters.python = {
     type = "executable",
     command = "/usr/bin/python",
@@ -50,7 +54,7 @@ dap.configurations.typescript = {
         type = "node2",
         request = "launch",
         program = "${workspaceFolder}/index.js",
-        cwd = vim.fn.getcwd(),
+        cwd = fn.getcwd(),
         stopOnEntry = true,
         sourceMaps = true,
         protocol = "inspector",
@@ -62,7 +66,7 @@ dap.configurations.typescript = {
         type = "node2",
         request = "attach",
         sourceMaps = true,
-        cwd = vim.fn.getcwd(),
+        cwd = fn.getcwd(),
         processId = require("dap.utils").pick_process,
     },
 }
@@ -73,7 +77,7 @@ dap.configurations.javascript = {
         type = "node2",
         request = "launch",
         program = "${file}",
-        cwd = vim.fn.getcwd(),
+        cwd = fn.getcwd(),
         --stopOnEntry = true,
         sourceMaps = true,
         protocol = "inspector",
@@ -120,7 +124,7 @@ dap.configurations.cs = {
         request = "launch",
         justMyCode = false,
         program = function()
-            return vim.fn.input('Path to dll', vim.fn.getcwd(), 'file')
+            return fn.input('Path to dll', fn.getcwd(), 'file')
         end,
     },
     {
