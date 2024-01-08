@@ -46,6 +46,7 @@ wk.register({
         D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "declaration" },
         d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "definition" },
         l = { "<C-w>v<C-w>l<cmd>lua vim.lsp.buf.definition()<CR>", "peek-definition-right" },
+        o = { "<C-w>v<C-w>lgf<CR>", "peek-definition-right" },
         r = { "<cmd>lua vim.lsp.buf.references()<CR>", "references" },
         i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "implementation" },
     },
@@ -181,6 +182,7 @@ wk.register({
     o = {
         name = "open",
         f = { "<cmd>NvimTreeFindFile<cr>", "project" },
+        o = { "<cmd>Oil<cr>", "open" },
         p = { "<cmd>NvimTreeToggle<cr>", "project" },
         t = { "<cmd>terminal<cr>", "terminal" },
         m = { "<cmd>MarkdownPreviewToggle<cr>", "markdown" },

@@ -8,7 +8,7 @@ require('lazy').setup({
     { "nvim-tree/nvim-web-devicons" },
     { "yorik1984/newpaper.nvim" },
     { "nyoom-engineering/oxocarbon.nvim" },
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim",                 name = "catppuccin", priority = 1000 },
     -- end themes
 
     -- text_helpers
@@ -123,6 +123,15 @@ require('lazy').setup({
     },
     { "christoomey/vim-tmux-navigator" },
     { "preservim/vimux" },
+    {
+        'stevearc/oil.nvim',
+        opts = {},
+        -- Optional dependencies
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require('oil').setup({});
+        end,
+    },
 
     -- end nav_helpers
     -- code_helpers
