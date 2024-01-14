@@ -109,30 +109,13 @@ require('lazy').setup({
             })
         end,
     },
-    {
-        "nvim-tree/nvim-tree.lua",
-        config = function()
-            require("nvim-tree").setup({})
-        end,
-    },
-    {
-        "folke/zen-mode.nvim",
-        config = function()
-            require("zen-mode").setup({})
-        end,
-    },
-    { "christoomey/vim-tmux-navigator" },
-    { "preservim/vimux" },
-    {
-        'stevearc/oil.nvim',
-        opts = {},
-        -- Optional dependencies
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require('oil').setup({});
-        end,
-    },
+    { "nvim-tree/nvim-tree.lua",   config = function() require("nvim-tree").setup({}) end },
+    { "folke/zen-mode.nvim",       config = function() require("zen-mode").setup({}) end },
+    { "0x00-ketsu/maximizer.nvim", config = function() require("maximizer").setup({}) end },
+    { 'stevearc/oil.nvim',         config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
 
+    -- { "christoomey/vim-tmux-navigator" },
+    -- { "preservim/vimux" },
     -- end nav_helpers
     -- code_helpers
     {

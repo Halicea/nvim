@@ -245,7 +245,7 @@ wk.register({
             t = { "<cmd>hi Normal guibg=NONE ctermbg=NONE<cr>", "transparent" },
         },
         t = { "<cmd>terminal<cr>", "terminal" },
-        m = { "<cmd>MaximizerToggle<cr>", "maximized" },
+        m = { "<cmd>lua require('maximizer').toggle()<cr>", "maximized" },
     },
     u = { "<cmd>UndotreeToggle<cr>", "undo tree" },
     w = {
@@ -255,7 +255,7 @@ wk.register({
         j = { "<C-w>j", "go-bellow" },
         k = { "<C-w>k", "go-above" },
         l = { "<C-w>l", "go-right" },
-        m = { "<cmd>MaximizerToggle<cr>", "maximize-toggle" },
+        m = { "<cmd>lua require('maximizer').toggle()<cr>", "maximized" },
         q = { "<cmd>wq<cr>", "quit" },
         s = { "<C-w>s<C-w>j", "split-down" },
         v = { "<C-w>v<C-w>l", "split-right" },
