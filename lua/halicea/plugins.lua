@@ -1,5 +1,6 @@
 require('lazy').setup({
     { "folke/which-key.nvim" },
+
     -- themes
     { "folke/tokyonight.nvim" },
     { "navarasu/onedark.nvim" },
@@ -8,18 +9,12 @@ require('lazy').setup({
     { "nvim-tree/nvim-web-devicons" },
     { "yorik1984/newpaper.nvim" },
     { "nyoom-engineering/oxocarbon.nvim" },
-    { "catppuccin/nvim",                 name = "catppuccin", priority = 1000 },
     -- end themes
 
     -- text_helpers
-    {
-        "gbprod/yanky.nvim",
-        config = function()
-            require("yanky").setup({})
-        end,
-    },
     { "xiyaowong/telescope-emoji.nvim" },
     { "HiPhish/rainbow-delimiters.nvim" },
+    { "gbprod/yanky.nvim",               config = function() require("yanky").setup({}) end, },
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
@@ -31,30 +26,12 @@ require('lazy').setup({
         end
     },
     -- end text_helpers
-    -- db
-    { "tpope/vim-dadbod" },
-    { "kristijanhusak/vim-dadbod-ui" },
-    { "kristijanhusak/vim-dadbod-completion" },
-    -- db end
-
-    -- ai
-    { "github/copilot.vim" },
-    {
-        "dpayne/CodeGPT.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-        },
-        config = function()
-            require("codegpt.config")
-        end,
-    },
-    -- end ai
 
     -- lsp
     { "neovim/nvim-lspconfig" },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
+
     -- Autocompletion
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-buffer" },
@@ -62,23 +39,27 @@ require('lazy').setup({
     { "saadparwaiz1/cmp_luasnip" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/cmp-nvim-lua" },
-    -- Snippets
-    { "L3MON4D3/LuaSnip" },
-    { "rafamadriz/friendly-snippets" },
+
     { "jose-elias-alvarez/null-ls.nvim" },
-    {
-        "folke/trouble.nvim",
-        config = function()
-            require("trouble").setup({})
-        end,
-    },
     { "Issafalcon/lsp-overloads.nvim" },
     { "ray-x/lsp_signature.nvim" },
     -- end lsp
 
+    -- snippets
+    { "L3MON4D3/LuaSnip" },
+    { "rafamadriz/friendly-snippets" },
+    -- end snippets
+
     -- nav_helpers
-    -- telescope
-    { "nvim-telescope/telescope-dap.nvim" },
+    { "christoomey/vim-tmux-navigator" },
+    { "preservim/vimux" },
+    { "tpope/vim-fugitive" },
+    { "mbbill/undotree" },
+    { "tpope/vim-eunuch" },
+    { "nvim-tree/nvim-tree.lua",          config = function() require("nvim-tree").setup({}) end },
+    { "folke/zen-mode.nvim",              config = function() require("zen-mode").setup({}) end },
+    { "stevearc/oil.nvim",                config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
+    { 'akinsho/toggleterm.nvim' },
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
@@ -109,45 +90,20 @@ require('lazy').setup({
             })
         end,
     },
-    {
-        "nvim-tree/nvim-tree.lua",
-        config = function()
-            require("nvim-tree").setup({})
-        end,
-    },
-    {
-        "folke/zen-mode.nvim",
-        config = function()
-            require("zen-mode").setup({})
-        end,
-    },
-    { "christoomey/vim-tmux-navigator" },
-    { "preservim/vimux" },
-    {
-        'stevearc/oil.nvim',
-        opts = {},
-        -- Optional dependencies
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require('oil').setup({});
-        end,
-    },
+    { "0x00-ketsu/maximizer.nvim", config = function() require("maximizer").setup{} end },
+    -- nav_helpersr
 
-    -- end nav_helpers
     -- code_helpers
-    {
-        "kylechui/nvim-surround",
-        config = function()
-            require("nvim-surround").setup({})
-        end,
-    },
-    { "tpope/vim-fugitive" },
-    {
-        "numToStr/Comment.nvim",
-        config = function()
-            require("Comment").setup()
-        end,
-    },
+    { "jmederosalvarado/roslyn.nvim" },
+    { "mg979/vim-visual-multi" },
+    { "kylechui/nvim-surround",       config = function() require("nvim-surround").setup({}) end },
+    { "numToStr/Comment.nvim",        config = function() require("Comment").setup() end },
+    { "iamcco/markdown-preview.nvim", build = function() vim.fn["mkdp#util#install"]() end },
+    { "windwp/nvim-autopairs",        config = function() require("nvim-autopairs").setup({}) end },
+    { 'norcalli/nvim-colorizer.lua',  config = function() require('colorizer').setup() end },
+    { "folke/trouble.nvim",           config = function() require("trouble").setup({}) end },
+    { "folke/noice.nvim",             dependencies = { "MunifTanjim/nui.nvim", } },
+    { "folke/todo-comments.nvim",            dependencies = { "nvim-lua/plenary.nvim" } },
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -164,68 +120,42 @@ require('lazy').setup({
         end,
     },
     {
-        "iamcco/markdown-preview.nvim",
-        build = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-    },
-    { "mbbill/undotree" },
-    { "tpope/vim-eunuch" },
-    { "nvim-treesitter/playground" },
-    {
-        "windwp/nvim-autopairs",
-        config = function()
-            require("nvim-autopairs").setup({})
-        end,
-    },
-    { "jmederosalvarado/roslyn.nvim" },
-    {
         "Hoffs/omnisharp-extended-lsp.nvim",
         config = function()
-            local config = {
-                handlers = {
-                    ["textDocument/definition"] = require("omnisharp_extended").handler,
-                },
-            }
-            require("lspconfig").omnisharp.setup(config)
-        end,
+            require("lspconfig").omnisharp.setup({ handlers = { ["textDocument/definition"] = require("omnisharp_extended").handler } })
+        end
     },
-    { "mg979/vim-visual-multi" },
-    {
-        "ThePrimeagen/refactoring.nvim",
-        dependencies = {
-            { "nvim-lua/plenary.nvim" },
-            { "nvim-treesitter/nvim-treesitter" },
-        },
-    },
-    {
-        "folke/todo-comments.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-    },
-    -- -- end code_helpers
-    -- -- debug_helpers
+    -- end code_helpers
+
+    -- debug_helpers
     { "nvim-telescope/telescope-dap.nvim" },
     { "mfussenegger/nvim-dap" },
-    {
-        "rcarriga/nvim-dap-ui",
-        config = function()
-            require("dapui").setup({})
-        end,
-    },
-    {
-        "theHamsta/nvim-dap-virtual-text",
-        config = function()
-            require("nvim-dap-virtual-text").setup({})
-        end,
-    },
-
+    { "rcarriga/nvim-dap-ui",                config = function() require("dapui").setup({}) end },
+    { "theHamsta/nvim-dap-virtual-text",     config = function() require("nvim-dap-virtual-text").setup({}) end },
     -- end debug_helpers
+
+    -- db
+    { "tpope/vim-dadbod" },
+    { "kristijanhusak/vim-dadbod-ui" },
+    { "kristijanhusak/vim-dadbod-completion" },
+    -- db end
+
+    -- ai
+    { "github/copilot.vim" },
+    {
+        "dpayne/CodeGPT.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+        },
+        config = function() require("codegpt.config") end,
+    },
+    -- end ai
+
+    -- Org mode
     {
         'nvim-orgmode/orgmode',
-        dependencies = {
-            { 'nvim-treesitter/nvim-treesitter', lazy = true },
-        },
-        event = 'VeryLazy',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
         config = function()
             -- Load treesitter grammar for org
             require('orgmode').setup_ts_grammar()
@@ -245,16 +175,5 @@ require('lazy').setup({
                 org_default_notes_file = '~/org/notes.org',
             })
         end,
-    },
-    {
-        'norcalli/nvim-colorizer.lua',
-        config = function()
-            require('colorizer').setup()
-        end,
-    },
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        dependencies = { "MunifTanjim/nui.nvim", },
     },
 })

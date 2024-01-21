@@ -184,7 +184,7 @@ wk.register({
         f = { "<cmd>NvimTreeFindFile<cr>", "project" },
         o = { "<cmd>Oil<cr>", "open" },
         p = { "<cmd>NvimTreeToggle<cr>", "project" },
-        t = { "<cmd>terminal<cr>", "terminal" },
+        t = { "<cmd>ToggleTerm<cr>", "terminal" },
         m = { "<cmd>MarkdownPreviewToggle<cr>", "markdown" },
         d = { "<cmd>lua require('dapui').toggle()<cr>", "debug" },
         i = { "<cmd>TroubleToggle<cr>", "issues" },
@@ -205,12 +205,12 @@ wk.register({
     },
     r = {
         name = "repl",
-        t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
-        o = { "<cmd>VimuxOpenRunner<cr>", "open" },
-        k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
-        c = { "<cmd>VimuxPromptCommand<cr>", "cmd-prompt" },
-        r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
-        d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
+        -- t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
+        -- o = { "<cmd>VimuxOpenRunner<cr>", "open" },
+        -- k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
+        -- c = { "<cmd>VimuxPromptCommand<cr>", "cmd-prompt" },
+        -- r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
+        -- d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
         s = { "vip:<C-U>REPLSendLines<cr><esc>%", "send-paragraph" },
         a = { "ggVG:<C-U>REPLSendLines<cr><esc>", "send-all" },
     },
@@ -244,8 +244,8 @@ wk.register({
             },
             t = { "<cmd>hi Normal guibg=NONE ctermbg=NONE<cr>", "transparent" },
         },
-        t = { "<cmd>terminal<cr>", "terminal" },
-        m = { "<cmd>MaximizerToggle<cr>", "maximized" },
+        t = { "<cmd>ToggleTerm<cr>", "terminal" },
+        m = { "<cmd>lua require('maximizer').toggle()<CR>", "maximized" },
     },
     u = { "<cmd>UndotreeToggle<cr>", "undo tree" },
     w = {
@@ -255,7 +255,7 @@ wk.register({
         j = { "<C-w>j", "go-bellow" },
         k = { "<C-w>k", "go-above" },
         l = { "<C-w>l", "go-right" },
-        m = { "<cmd>MaximizerToggle<cr>", "maximize-toggle" },
+        m = { "<cmd>lua require('maximizer').toggle()<CR>", "maximize-toggle" },
         q = { "<cmd>wq<cr>", "quit" },
         s = { "<C-w>s<C-w>j", "split-down" },
         v = { "<C-w>v<C-w>l", "split-right" },
@@ -277,6 +277,15 @@ wk.register({
         j = { "<Plug>(YankyCycleForward)", "next yank" },
         k = { "<Plug>(YankyCycleBackward)", "previous yank" },
     },
+    ["`"] = {
+        name="terminal",
+        ['`'] = {'<cmd>ToggleTerm<cr>', 'toggle'},
+        c = { '<cmd>lua require("toggleterm.terminal").Terminal:new({}).toggle()', "create-new"},
+        f = { '<cmd>ToggleTerm direction="float"<cr>', 'toggle-float'},
+        v = { '<cmd>ToggleTerm direction="vertical"<cr>', 'term-vertical'},
+        h = { '<cmd>ToggleTerm direction="horizontal"<cr>', 'term-horisontal'},
+        l = { '<cmd>ToggleTermSendCurrentLine<cr>', 'send-line'},
+    },
 
     ["<Tab>"] = {
         name = "tabs",
@@ -288,16 +297,20 @@ wk.register({
     },
     ["<leader>"] = { "<cmd>lua Modal('find_files')<cr>", "find files" },
     ["<enter>"] = { "<cmd>lua Modal('command_history')<cr>", "commands" },
-}, { prefix = "<leader>" })
+}, { prefix = "<leader>", mode="n"})
+wk.register({
+}, { prefix = "<leader>", mode="v"})
 
 wk.register({
     K = { "<cmd>m '<-2<CR>gv=gv", "move selection up" },
     J = { "<cmd>m '>+1<CR>gv=gv", "move selection down" },
 
+
     ["<leader>"] = {
         c = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
         r = { ":<C-U>REPLSendLines<cr>", "send-to-repl" },
-        s = { ":<C-U>sort<cr>", "sort" },
+        s = { '<cmd>ToggleTermSendVisualLines<cr>', 'send-visual'},
+        S = { ":<C-U>sort<cr>", "sort" },
         y = { '"+y', "copy" }, -- copy to system clipboard
     },
 }, { mode = "v" })
