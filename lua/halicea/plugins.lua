@@ -91,8 +91,8 @@ local nav_helpers = {
 
 }
 if GetOS() == "unix" then
-    nav_helpers.insert({ "christoomey/vim-tmux-navigator" })
-    nav_helpers.insert({ "preservim/vimux" })
+    table.insert(nav_helpers, { "christoomey/vim-tmux-navigator" })
+    table.insert(nav_helpers, { "preservim/vimux" })
 end
 
 local code_helpers = {
@@ -129,7 +129,7 @@ local code_helpers = {
     },
 }
 if GetOS() == "unix" then
-    code_helpers.insert({ "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim", } })
+    table.insert(code_helpers, { "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim", } })
 end
 local debug_helpers = {
     { "nvim-telescope/telescope-dap.nvim" },
