@@ -28,7 +28,7 @@ o.incsearch = true
 o.scrolloff = 8
 o.linebreak = true
 o.showmode = false
-o.showcmd=false
+o.showcmd= true
 
 o.completeopt = "menuone,noinsert,noselect"
 o.signcolumn = "yes"

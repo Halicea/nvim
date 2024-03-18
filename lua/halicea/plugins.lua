@@ -50,9 +50,6 @@ local nav_helpers = {
     { "tpope/vim-fugitive" },
     { "mbbill/undotree" },
     { "tpope/vim-eunuch" },
-    { "nvim-tree/nvim-tree.lua", config = function() require("nvim-tree").setup({}) end },
-    { "folke/zen-mode.nvim",     config = function() require("zen-mode").setup({}) end },
-    { "stevearc/oil.nvim",       config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
     { 'akinsho/toggleterm.nvim' },
     {
         'nvim-telescope/telescope.nvim',
@@ -84,11 +81,25 @@ local nav_helpers = {
             })
         end,
     },
-    { "nvim-tree/nvim-tree.lua",       config = function() require("nvim-tree").setup({}) end },
-    { "folke/zen-mode.nvim",           config = function() require("zen-mode").setup({}) end },
-    { "0x00-ketsu/maximizer.nvim",     config = function() require("maximizer").setup({}) end },
-    { 'stevearc/oil.nvim',             config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
-
+    { "nvim-tree/nvim-tree.lua",   config = function() require("nvim-tree").setup({}) end },
+    { "folke/zen-mode.nvim",       config = function() require("zen-mode").setup({}) end },
+    { "0x00-ketsu/maximizer.nvim", config = function() require("maximizer").setup({}) end },
+    { 'stevearc/oil.nvim',         config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
+    {
+      "harrisoncramer/gitlab.nvim",
+      dependencies = {
+        "MunifTanjim/nui.nvim",
+        "nvim-lua/plenary.nvim",
+        "sindrets/diffview.nvim",
+        "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
+        "nvim-tree/nvim-web-devicons" -- Recommended but not required. Icons in discussion tree.
+      },
+      enabled = true,
+      build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
+      config = function()
+        require("gitlab").setup()
+      end,
+    },
 }
 if GetOS() == "unix" then
     table.insert(nav_helpers, { "christoomey/vim-tmux-navigator" })
@@ -150,19 +161,38 @@ local other_tools = {
     -- ai
     { "github/copilot.vim" },
     {
-        "dpayne/CodeGPT.nvim",
+        "jackMort/ChatGPT.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("chatgpt").setup()
+        end,
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "folke/trouble.nvim",
+            "nvim-telescope/telescope.nvim"
+        }
+    },
+    {
+        "Exafunction/codeium.nvim",
         dependencies = {
             "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
+            "hrsh7th/nvim-cmp",
         },
-        config = function() require("codegpt.config") end,
+        config = function()
+            require("codeium").setup({
+            })
+        end
     },
     -- end ai
 
     -- Org mode
     {
         'nvim-orgmode/orgmode',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        dependencies = {
+            { 'nvim-treesitter/nvim-treesitter', lazy = true },
+        },
+        event = 'VeryLazy',
         config = function()
             -- Load treesitter grammar for org
             require('orgmode').setup_ts_grammar()
@@ -178,11 +208,22 @@ local other_tools = {
 
             -- Setup orgmode
             require('orgmode').setup({
+                org_todo_keywords = { 'TODO', 'IN-PROGRESS', 'BLOCKED', 'FUTURE', '|', 'DONE', 'CANCELLED' },
                 org_agenda_files = '~/org/**/*',
-                org_default_notes_file = '~/org/notes.org',
+                org_default_notes_file = '~/org/todo.org',
             })
         end,
     },
+    {
+        'akinsho/org-bullets.nvim',
+        config = function()
+            require('org-bullets').setup()
+        end
+    }
+}
+
+local experimental = {
+    { "kkharji/sqlite.lua" }
 }
 local allGroups = {
     themes,
@@ -193,6 +234,7 @@ local allGroups = {
     code_helpers,
     debug_helpers,
     other_tools,
+    experimental,
 }
 local plugins = {}
 for _, group in pairs(allGroups) do

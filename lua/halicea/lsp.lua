@@ -80,6 +80,13 @@ require("mason-lspconfig").setup_handlers({
                 },
             }
             lspconfig[server].setup(config)
+        elseif server == "yamlls" then
+            config.yaml = {
+                settings = {
+                        customTags = { "!reference" }
+                }
+            }
+            lspconfig[server].setup(config)
         else
             lspconfig[server].setup(config)
         end

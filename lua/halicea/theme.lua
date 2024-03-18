@@ -3,20 +3,23 @@ local cmd = vim.cmd
 local api = vim.api
 
 o.background = "dark"
-local themename = "nord"
+local themename = "tokyonight-storm"
+
 local present, _ = pcall(require, themename)
 if present then
     cmd("colorscheme " .. themename)
 end
-local function hgh(key, val)
+local function hl(key, val)
     api.nvim_set_hl(0, key, val)
 end
 
-hgh("WinSeparator", { fg = "LightGray", bg = nil })
-hgh("Normal", { bg = nil, ctermbg = nil })
-hgh("SignColumn", { bg = nil })
-hgh("ColorColumn", { bg = nil })
-hgh("MsgArea", { bg = nil })
-hgh("StatusLine", { bg = nil })
-hgh("NormalFloat", { ctermfg = "LightGrey", bg = nil })
+hl("WinSeparator", { fg = "LightGray", bg = nil })
+hl("Normal", { bg = nil, ctermbg = nil })
+hl("SignColumn", { bg = nil })
+hl("ColorColumn", { bg = nil })
+hl("MsgArea", { bg = nil })
+hl("StatusLine", { bg = nil })
+hl("NormalFloat", { ctermfg = "LightGrey", bg = nil })
+hl("WinBar", { bg = nil, bold = true })
+hl("WinBarNC", { bg = nil, bold = false })
 

@@ -57,19 +57,18 @@ wk.register({
 })
 wk.register({
     a = {
-        name = "telescope",
+        name = "all the rest",
         a = { "<cmd>lua Modal('autocommands')<cr>", "code-actions" },
         b = { "<cmd>lua Modal('buffers')<cr>", "buffers" },
         c = { "<cmd>lua Modal('commands')<cr>", "commands" },
         C = { "<cmd>lua Modal('colorscheme')<cr>", "theme" },
-        f = { "<cmd>lua Modal('find_files')<cr>", "files" },
         e = { "<cmd>Telescope emoji theme=ivy<cr>", "emoji" },
-        g = { "<cmd>lua Modal('live_grep')<cr>", "grep" },
-        h = { "<cmd>lua Modal('help_tags')<cr>", "help" },
-        l = { "<cmd>lua Modal('loclist')<cr>", "loc-list" },
+        f = { "<cmd>lua Modal('find_files')<cr>", "files" },
+        g = { "<cmd>ChatGPT<cr>", "git" },
         q = { "<cmd>lua Modal('marks')<cr>", "marks" },
-        m = { "<cmd>lua Modal('man_pages')<cr>", "marks" },
-        o = { "<cmd>lua Modal('vim_options')<cr>", "options" },
+        m = { "<cmd>lua Modal('man_pages')<cr>", "man" },
+        o = { "<cmd>lua Modal('vim_options')<cr>", "vim options" },
+
     },
     b = {
         name = "buffers",
@@ -179,15 +178,21 @@ wk.register({
         l = { "<cmd>LspInfo<CR>", "status" },
         s = { "<cmd>LspStart<CR>", "start" },
     },
-    o = {
+    m = {
+        name = "marks",
+        m={"<cmd>lua require('dirmark').dirmark(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
+        a={"<cmd>lua require('dirmark').addCurrentDirectory()<cr>", "add cwd" },
+        e={"<cmd>lua require('dirmark').openDirMarks()<cr>", "dir marks file" },
+        r={"<cmd>lua require('roam').search(require('telescope.themes').get_ivy())<cr>", "roam" },
+    },
+    n = {
         name = "open",
-        f = { "<cmd>NvimTreeFindFile<cr>", "project" },
+        n = { "<cmd>Oil<cr>", "oil" },
         o = { "<cmd>Oil<cr>", "open" },
+        f = { "<cmd>NvimTreeFindFile<cr>", "project find" },
         p = { "<cmd>NvimTreeToggle<cr>", "project" },
-        t = { "<cmd>ToggleTerm<cr>", "terminal" },
         m = { "<cmd>MarkdownPreviewToggle<cr>", "markdown" },
         d = { "<cmd>lua require('dapui').toggle()<cr>", "debug" },
-        i = { "<cmd>TroubleToggle<cr>", "issues" },
     },
     p = {
         name = "plugins",
@@ -205,12 +210,12 @@ wk.register({
     },
     r = {
         name = "repl",
-        -- t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
-        -- o = { "<cmd>VimuxOpenRunner<cr>", "open" },
-        -- k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
-        -- c = { "<cmd>VimuxPromptCommand<cr>", "cmd-prompt" },
-        -- r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
-        -- d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
+        t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
+        o = { "<cmd>VimuxOpenRunner<cr>", "open" },
+        k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
+        c = { "<cmd>VimuxPromptCommand<cr>", "cmd-prompt" },
+        r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
+        d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
         s = { "vip:<C-U>REPLSendLines<cr><esc>%", "send-paragraph" },
         a = { "ggVG:<C-U>REPLSendLines<cr><esc>", "send-all" },
     },
@@ -324,6 +329,21 @@ wk.register({
     ["<M-d>"] = { "<cmd>DapToggleBreakpoint<CR>" },
     ["<M-c>"] = { "<cmd>DapContinue<CR>" },
 }, { mode = "n" })
+
+-- custom orgmode goto definition
+api.nvim_create_autocmd({
+    "FileType",
+    "BufNewFile",
+    "BufRead",
+}, {
+    pattern = "*.org",
+    callback = function()
+        keymap.set('n', 'gd', function()
+            local  roam = require("org-roam")
+            roam.goto_id()
+        end)
+    end,
+})
 
 -- better goto definition for csharp
 api.nvim_create_autocmd({
