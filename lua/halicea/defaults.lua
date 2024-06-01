@@ -1,11 +1,13 @@
 local o = vim.opt
 local g = vim.g
-g.loaded_netrw = 1
-g.loaded_netrwPlugin = 1
 g.mapleader = " "
 g.maplocalleader = "\\"
+
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
 o.termguicolors=true
 o.exrc = true
+
 o.number = false
 o.relativenumber = false
 o.hlsearch = false
@@ -23,17 +25,16 @@ o.backup = false
 if os.getenv("HOME") then
     o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 end
+
 o.undofile = true
 o.incsearch = true
 o.scrolloff = 8
 o.linebreak = true
-o.showmode = false
-o.showcmd= true
 
 o.completeopt = "menuone,noinsert,noselect"
 o.signcolumn = "yes"
 o.colorcolumn = "80"
-o.cmdheight = 1
+o.cmdheight = 7
 o.updatetime = 50
 o.shortmess:append("c")
 
@@ -50,9 +51,4 @@ o.list=true
 o.listchars:append({eol="↵"})
 o.conceallevel = 2
 o.concealcursor = "nc"
-o.cmdheight=0
 
-o.winbar='%f\\ %y%m'
-o.ls = 0
-o.ch = 0
-o.laststatus=3

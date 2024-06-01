@@ -8,10 +8,38 @@ local themes = {
     { "nyoom-engineering/oxocarbon.nvim" },
 }
 
+local personal = {
+    {
+        "42dotmk/roam",
+        event = "VeryLazy",
+        config = function()
+            require("roam").setup({})
+        end,
+    },
+    {
+        "42dotmk/dirmark",
+        event = "VeryLazy",
+        config = function()
+            require("dirmark").setup({})
+        end,
+    },
+}
+
 local textHelpers = {
-    { "xiyaowong/telescope-emoji.nvim" },
-    { "HiPhish/rainbow-delimiters.nvim" },
-    { "gbprod/yanky.nvim",              config = function() require("yanky").setup({}) end, },
+    {
+        "xiyaowong/telescope-emoji.nvim",
+        event = "VeryLazy",
+    },
+    {
+        "HiPhish/rainbow-delimiters.nvim",
+        event = "VeryLazy",
+    },
+    {
+        "gbprod/yanky.nvim",
+        config = function()
+            require("yanky").setup({})
+        end,
+    },
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
@@ -25,25 +53,56 @@ local textHelpers = {
 }
 
 local lsp = {
-    { "neovim/nvim-lspconfig" },
-    { "williamboman/mason.nvim" },
-    { "williamboman/mason-lspconfig.nvim" },
+    {
+        "neovim/nvim-lspconfig",
+        event = "VeryLazy",
+    },
+    {
+        "williamboman/mason.nvim",
+        event = "VeryLazy",
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        event = "VeryLazy",
+    },
 
-    { "hrsh7th/nvim-cmp" },
-    { "hrsh7th/cmp-buffer" },
-    { "hrsh7th/cmp-path" },
-    { "saadparwaiz1/cmp_luasnip" },
+    {
+        "hrsh7th/nvim-cmp",
+        event = "VeryLazy",
+    },
+    {
+        "hrsh7th/cmp-buffer",
+        event = "VeryLazy",
+    },
+    {
+        "hrsh7th/cmp-path",
+        event = "VeryLazy",
+    },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/cmp-nvim-lua" },
-
     { "jose-elias-alvarez/null-ls.nvim" },
     { "Issafalcon/lsp-overloads.nvim" },
     { "ray-x/lsp_signature.nvim" },
 }
 
 local snippets = {
-    { "L3MON4D3/LuaSnip" },
-    { "rafamadriz/friendly-snippets" },
+    {
+        "L3MON4D3/LuaSnip",
+        event = "VeryLazy",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        config = function()
+            require("luasnip.loaders.from_vscode").lazy_load()
+            require("luasnip.loaders.from_lua").lazy_load({ path = "~/projects/halicea/snippets" })
+        end
+    },
+    {
+        "rafamadriz/friendly-snippets",
+        event = "VeryLazy",
+    },
+    {
+        'saadparwaiz1/cmp_luasnip',
+        event = "VeryLazy",
+    },
 }
 
 local nav_helpers = {
@@ -54,6 +113,7 @@ local nav_helpers = {
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
+        event = "VeryLazy",
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require("telescope").load_extension("dap")
@@ -86,19 +146,20 @@ local nav_helpers = {
     { "0x00-ketsu/maximizer.nvim", config = function() require("maximizer").setup({}) end },
     { 'stevearc/oil.nvim',         config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
     {
-      "harrisoncramer/gitlab.nvim",
-      dependencies = {
-        "MunifTanjim/nui.nvim",
-        "nvim-lua/plenary.nvim",
-        "sindrets/diffview.nvim",
-        "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
-        "nvim-tree/nvim-web-devicons" -- Recommended but not required. Icons in discussion tree.
-      },
-      enabled = true,
-      build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
-      config = function()
-        require("gitlab").setup()
-      end,
+        "harrisoncramer/gitlab.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
+            "stevearc/dressing.nvim",     -- Recommended but not required. Better UI for pickers.
+            "nvim-tree/nvim-web-devicons" -- Recommended but not required. Icons in discussion tree.
+        },
+        enabled = true,
+        build = function() require("gitlab.server").build(true) end, -- Builds the Go binary
+        config = function()
+            require("gitlab").setup()
+        end,
     },
 }
 if GetOS() == "unix" then
@@ -143,22 +204,30 @@ if GetOS() == "unix" then
     table.insert(code_helpers, { "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim", } })
 end
 local debug_helpers = {
-    { "nvim-telescope/telescope-dap.nvim" },
-    { "mfussenegger/nvim-dap" },
-    { "rcarriga/nvim-dap-ui",             config = function() require("dapui").setup({}) end },
-    { "theHamsta/nvim-dap-virtual-text",  config = function() require("nvim-dap-virtual-text").setup({}) end },
+    {
+        "nvim-neotest/nvim-nio",
+        event = 'VeryLazy',
+    },
+    {
+        "nvim-telescope/telescope-dap.nvim",
+        event = 'VeryLazy',
+    },
+    {
+        "mfussenegger/nvim-dap",
+        event = 'VeryLazy',
+    },
+    {
+        "rcarriga/nvim-dap-ui",
+        event = 'VeryLazy',
+        config = function() require("dapui").setup({}) end
+    },
+    {
+        "theHamsta/nvim-dap-virtual-text",
+        event = 'VeryLazy',
+        config = function() require("nvim-dap-virtual-text").setup({}) end
+    },
 }
-
-local other_tools = {
-    { "folke/which-key.nvim" },
-
-    -- db
-    { "tpope/vim-dadbod" },
-    { "kristijanhusak/vim-dadbod-ui" },
-    { "kristijanhusak/vim-dadbod-completion" },
-    -- db end
-
-    -- ai
+local ai_tools = {
     { "github/copilot.vim" },
     {
         "jackMort/ChatGPT.nvim",
@@ -173,18 +242,41 @@ local other_tools = {
             "nvim-telescope/telescope.nvim"
         }
     },
+    -- {
+    --     "Exafunction/codeium.nvim",
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --         "hrsh7th/nvim-cmp",
+    --     },
+    --     config = function()
+    --         require("codeium").setup({
+    --         })
+    --     end
+    -- },
+}
+
+local other_tools = {
     {
-        "Exafunction/codeium.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "hrsh7th/nvim-cmp",
-        },
-        config = function()
-            require("codeium").setup({
-            })
-        end
+        "folke/which-key.nvim",
+        event = 'VeryLazy',
     },
-    -- end ai
+
+    -- db
+    {
+        "tpope/vim-dadbod",
+        event = 'VeryLazy',
+    },
+
+    {
+        "kristijanhusak/vim-dadbod-ui",
+        event = 'VeryLazy',
+    },
+    {
+        "kristijanhusak/vim-dadbod-completion",
+        event = 'VeryLazy',
+    },
+    -- db end
+
 
     -- Org mode
     {
@@ -194,9 +286,6 @@ local other_tools = {
         },
         event = 'VeryLazy',
         config = function()
-            -- Load treesitter grammar for org
-            require('orgmode').setup_ts_grammar()
-
             -- Setup treesitter
             require('nvim-treesitter.configs').setup({
                 highlight = {
@@ -209,13 +298,15 @@ local other_tools = {
             -- Setup orgmode
             require('orgmode').setup({
                 org_todo_keywords = { 'TODO', 'IN-PROGRESS', 'BLOCKED', 'FUTURE', '|', 'DONE', 'CANCELLED' },
-                org_agenda_files = '~/org/**/*',
+                org_agenda_files = {'~/org/**/*', '~/org/meetings.org'},
                 org_default_notes_file = '~/org/todo.org',
+                org_hide_leading_stars = true,
             })
         end,
     },
     {
         'akinsho/org-bullets.nvim',
+        event = 'VeryLazy',
         config = function()
             require('org-bullets').setup()
         end
@@ -223,7 +314,12 @@ local other_tools = {
 }
 
 local experimental = {
-    { "kkharji/sqlite.lua" }
+    {
+        "kkharji/sqlite.lua",
+        event = 'VeryLazy',
+    },
+    { "jbyuki/venn.nvim" }
+
 }
 local allGroups = {
     themes,
@@ -233,8 +329,10 @@ local allGroups = {
     nav_helpers,
     code_helpers,
     debug_helpers,
+    ai_tools,
     other_tools,
     experimental,
+    personal,
 }
 local plugins = {}
 for _, group in pairs(allGroups) do
@@ -243,3 +341,4 @@ for _, group in pairs(allGroups) do
     end
 end
 require('lazy').setup(plugins)
+

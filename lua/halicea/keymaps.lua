@@ -28,8 +28,8 @@ keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
 wk.register({
     ["<Left>"] = { "4<C-w><", "dec width" },
     ["<Right>"] = { "4<C-w>>", "inc width" },
-    ["<Up>"] = { "4<C-w>+", "inc height" },
-    ["<Down>"] = { "8<C-w>-", "dec height" },
+    ["<Up>"] = { "1<C-w>+", "inc height" },
+    ["<Down>"] = { "1<C-w>-", "dec height" },
     ["<C-]>"] = { "<cmd>cnext<CR>", "next item" },
     ["<C-[>"] = { "<cmd>cprevious<CR>", "prev item" },
     ["<C-\\>"] = { "<cmd>copen<CR>", "open coc" },
@@ -68,7 +68,8 @@ wk.register({
         q = { "<cmd>lua Modal('marks')<cr>", "marks" },
         m = { "<cmd>lua Modal('man_pages')<cr>", "man" },
         o = { "<cmd>lua Modal('vim_options')<cr>", "vim options" },
-
+        r = {"<cmd>RoamOpenId<cr>", "roam-goto-id"},
+        v = {"<cmd>lua Toggle_venn()<CR>", "toggle-venn"}
     },
     b = {
         name = "buffers",
@@ -79,6 +80,8 @@ wk.register({
         p = { "<cmd>bp<cr>", "previous" },
         o = { "<C-^><cr>", "other" },
         r = { "<cmd>e! %<cr>", "refresh" },
+        y = { "<cmd>CopyBufferPath<cr>", "copy-path" },
+
     },
     c = {
         name = "code",
@@ -180,9 +183,9 @@ wk.register({
     },
     m = {
         name = "marks",
-        m={"<cmd>lua require('dirmark').dirmark(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
-        a={"<cmd>lua require('dirmark').addCurrentDirectory()<cr>", "add cwd" },
-        e={"<cmd>lua require('dirmark').openDirMarks()<cr>", "dir marks file" },
+        m={"<cmd>lua require('dirmark').open(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
+        a={"<cmd>lua require('dirmark').mark_cwd()<cr>", "add cwd" },
+        e={"<cmd>lua require('dirmark').open_marks_file()<cr>", "dir marks file" },
         r={"<cmd>lua require('roam').search(require('telescope.themes').get_ivy())<cr>", "roam" },
     },
     n = {
@@ -210,6 +213,7 @@ wk.register({
     },
     r = {
         name = "repl",
+        e = { "<cmd>@:<cr>", "last command"},
         t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
         o = { "<cmd>VimuxOpenRunner<cr>", "open" },
         k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
@@ -303,14 +307,11 @@ wk.register({
     ["<leader>"] = { "<cmd>lua Modal('find_files')<cr>", "find files" },
     ["<enter>"] = { "<cmd>lua Modal('command_history')<cr>", "commands" },
 }, { prefix = "<leader>", mode="n"})
-wk.register({
-}, { prefix = "<leader>", mode="v"})
 
 wk.register({
     K = { "<cmd>m '<-2<CR>gv=gv", "move selection up" },
     J = { "<cmd>m '>+1<CR>gv=gv", "move selection down" },
-
-
+    f = { "<cmd><,>VBox<CR>", "box-surround"},
     ["<leader>"] = {
         c = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
         r = { ":<C-U>REPLSendLines<cr>", "send-to-repl" },

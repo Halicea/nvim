@@ -4,6 +4,9 @@ local api = vim.api
 
 o.background = "dark"
 local themename = "tokyonight-storm"
+--
+-- o.background = "light"
+-- local themename = "newpaper"
 
 local present, _ = pcall(require, themename)
 if present then
@@ -23,3 +26,9 @@ hl("NormalFloat", { ctermfg = "LightGrey", bg = nil })
 hl("WinBar", { bg = nil, bold = true })
 hl("WinBarNC", { bg = nil, bold = false })
 
+o.winbar='%f\\ %y%m'
+o.ls = 0
+o.ch = 0
+o.laststatus=3
+o.showmode = true
+o.showcmd= true

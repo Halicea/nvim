@@ -1,7 +1,15 @@
 function GetOS()
     return package.config:sub(1,1) == "\\" and "win" or "unix"
 end
-
+-- create copy buffer command
+vim.cmd([[
+    command! CopyBufferPath :lua CopyBufferPath()
+]])
+function CopyBufferPath()
+    local path = vim.fn.expand('%:p')
+    vim.fn.setreg('+', path)
+    vim.fn.setreg('"', path)
+end
 -- set shell to pwsh on windows
 if GetOS() == "win" then
     local powershell_options = {

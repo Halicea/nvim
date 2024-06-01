@@ -20,7 +20,6 @@ local bind_lsp_keys = function(client, bufnr)
     buf_set_keymap("n", "<space>ch", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
     buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    --buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
     buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
@@ -36,16 +35,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
         local bufnr = ev.buf
+        if client ~= nil then
+            if client.server_capabilities.signatureHelpProvider then
+                require("lsp-overloads").setup(client,{})
+            end
 
-        if client.server_capabilities.signatureHelpProvider then
-            require("lsp-overloads").setup(client, {})
+            bind_lsp_keys(client, bufnr)
         end
-        bind_lsp_keys(client, bufnr)
     end,
 })
 
 local lspconfig = require("lspconfig")
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 
 require("mason").setup({})
 require("mason-lspconfig").setup({})
@@ -60,8 +62,10 @@ require("mason-lspconfig").setup_handlers({
         if (server == "omnisharp") then
             config.handlers["textDocument/definition"] = require("omnisharp_extended").handler
             lspconfig[server].setup(config)
-        elseif server == "lua_ls" then
-            config.Lua = {
+        end
+
+        config.settings = {
+            Lua = {
                 runtime = {
                     -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
                     version = "LuaJIT",
@@ -78,21 +82,19 @@ require("mason-lspconfig").setup_handlers({
                 telemetry = {
                     enable = false,
                 },
-            }
-            lspconfig[server].setup(config)
-        elseif server == "yamlls" then
-            config.yaml = {
-                settings = {
-                        customTags = { "!reference" }
-                }
-            }
-            lspconfig[server].setup(config)
-        else
-            lspconfig[server].setup(config)
-        end
+            },
+            yaml = {
+                customTags = { "!reference" }
+            },
+        }
+        lspconfig[server].setup(config)
     end
 })
 
+
+lspconfig["powershell_es"].setup({
+    bundle_path = '/home/halicea/.local/share/nvim/mason/packages/powershell-editor-services'
+})
 -- require("roslyn").setup({
 --     dotnet_cmd = "dotnet", -- this is the default
 --     roslyn_version = "4.8.0-3.23475.7", -- this is the default
@@ -108,11 +110,13 @@ local cmp = require('cmp')
 cmp.setup({
     sources = {
         { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'buffer' },
+        { name = 'path' },
     },
     mapping = cmp.mapping.preset.insert({
         -- Enter key confirms completion item
         ['<CR>'] = cmp.mapping.confirm({ select = false }),
-
         -- Ctrl + space triggers completion menu
         ['<C-Space>'] = cmp.mapping.complete(),
     }),
