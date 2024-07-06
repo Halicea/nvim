@@ -5,6 +5,8 @@ local themes = {
     { "gzagatti/vim-leuven-theme" },
     { "nvim-tree/nvim-web-devicons" },
     { "yorik1984/newpaper.nvim" },
+    { "NLKNguyen/papercolor-theme" },
+    { "rose-pine/neovim",                name = "rose-pine" },
     { "nyoom-engineering/oxocarbon.nvim" },
 }
 
@@ -49,6 +51,9 @@ local textHelpers = {
             ibl.setup({})
             ibl.update { enabled = false }
         end
+    },
+    {
+        'mhartington/formatter.nvim'
     },
 }
 
@@ -142,9 +147,45 @@ local nav_helpers = {
         end,
     },
     { "nvim-tree/nvim-tree.lua",   config = function() require("nvim-tree").setup({}) end },
-    { "folke/zen-mode.nvim",       config = function() require("zen-mode").setup({}) end },
+    {
+        "folke/zen-mode.nvim",
+        config = function()
+            require("zen-mode").setup({
+                window = {
+                    backdrop = 0,               -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+                    width = 160,                -- width of the Zen window
+                    height = 1,                 -- height of the Zen window
+                    options = {
+                        signcolumn = "no",      -- disable signcolumn
+                        number = false,         -- disable number column
+                        relativenumber = false, -- disable relative numbers
+                        cursorline = false,     -- disable cursorline
+                        cursorcolumn = false,   -- disable cursor column
+                        foldcolumn = "0",       -- disable fold column
+                        list = true,            -- disable whitespace characters
+                    },
+                },
+                alacritty = {
+                    enabled = false,
+                    font = "14", -- font size
+                }
+            })
+        end
+    },
     { "0x00-ketsu/maximizer.nvim", config = function() require("maximizer").setup({}) end },
-    { 'stevearc/oil.nvim',         config = function() require('oil').setup({}) end,      dependencies = { "nvim-tree/nvim-web-devicons" } },
+    {
+        'stevearc/oil.nvim',
+        config = function()
+            require('oil').setup({
+                keymaps = {
+                    ["<leader>y"] = {
+                        "actions.yank_entry"
+                    }
+                }
+            })
+        end,
+        dependencies = { "nvim-tree/nvim-web-devicons" }
+    },
     {
         "harrisoncramer/gitlab.nvim",
         event = "VeryLazy",
@@ -160,6 +201,10 @@ local nav_helpers = {
         config = function()
             require("gitlab").setup()
         end,
+    },
+    {
+        "folke/which-key.nvim",
+        event = 'VeryLazy',
     },
 }
 if GetOS() == "unix" then
@@ -255,12 +300,7 @@ local ai_tools = {
     -- },
 }
 
-local other_tools = {
-    {
-        "folke/which-key.nvim",
-        event = 'VeryLazy',
-    },
-
+local db = {
     -- db
     {
         "tpope/vim-dadbod",
@@ -276,8 +316,9 @@ local other_tools = {
         event = 'VeryLazy',
     },
     -- db end
+}
 
-
+local org_mode = {
     -- Org mode
     {
         'nvim-orgmode/orgmode',
@@ -298,7 +339,7 @@ local other_tools = {
             -- Setup orgmode
             require('orgmode').setup({
                 org_todo_keywords = { 'TODO', 'IN-PROGRESS', 'BLOCKED', 'FUTURE', '|', 'DONE', 'CANCELLED' },
-                org_agenda_files = {'~/org/**/*', '~/org/meetings.org'},
+                org_agenda_files = { '~/org/**/*', '~/org/meetings.org' },
                 org_default_notes_file = '~/org/todo.org',
                 org_hide_leading_stars = true,
             })
@@ -310,7 +351,8 @@ local other_tools = {
         config = function()
             require('org-bullets').setup()
         end
-    }
+    },
+    { "jbyuki/venn.nvim" }
 }
 
 local experimental = {
@@ -318,7 +360,6 @@ local experimental = {
         "kkharji/sqlite.lua",
         event = 'VeryLazy',
     },
-    { "jbyuki/venn.nvim" }
 
 }
 local allGroups = {
@@ -331,6 +372,8 @@ local allGroups = {
     debug_helpers,
     ai_tools,
     other_tools,
+    org_mode,
+    db,
     experimental,
     personal,
 }
@@ -341,4 +384,3 @@ for _, group in pairs(allGroups) do
     end
 end
 require('lazy').setup(plugins)
-

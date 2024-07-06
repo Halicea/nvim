@@ -2,12 +2,7 @@ local o = vim.opt
 local cmd = vim.cmd
 local api = vim.api
 
-o.background = "dark"
-local themename = "tokyonight-storm"
---
--- o.background = "light"
--- local themename = "newpaper"
-
+local themename = "rose-pine-dawn"
 local present, _ = pcall(require, themename)
 if present then
     cmd("colorscheme " .. themename)
@@ -21,14 +16,20 @@ hl("Normal", { bg = nil, ctermbg = nil })
 hl("SignColumn", { bg = nil })
 hl("ColorColumn", { bg = nil })
 hl("MsgArea", { bg = nil })
-hl("StatusLine", { bg = nil })
+hl("StatusLine", { bg = nil, link='Normal' })
+hl('StatuslineNC', {bg=nil, link = 'Normal'})
 hl("NormalFloat", { ctermfg = "LightGrey", bg = nil })
 hl("WinBar", { bg = nil, bold = true })
 hl("WinBarNC", { bg = nil, bold = false })
 
-o.winbar='%f\\ %y%m'
-o.ls = 0
-o.ch = 0
-o.laststatus=3
+WinBar = '%f%m%r%q%y%=#[%l,%c] %L|%P  '
+WinbarActive = false
+o.winbar = ''
+
+
+o.ch = 1
 o.showmode = true
 o.showcmd= true
+
+o.laststatus = 0
+vim.opt.statusline = string.rep('─', vim.api.nvim_win_get_width(0))

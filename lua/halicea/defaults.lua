@@ -33,7 +33,7 @@ o.linebreak = true
 
 o.completeopt = "menuone,noinsert,noselect"
 o.signcolumn = "yes"
-o.colorcolumn = "80"
+o.colorcolumn = "100"
 o.cmdheight = 7
 o.updatetime = 50
 o.shortmess:append("c")
@@ -51,4 +51,3 @@ o.list=true
 o.listchars:append({eol="↵"})
 o.conceallevel = 2
 o.concealcursor = "nc"
-

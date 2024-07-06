@@ -34,11 +34,11 @@ wk.register({
     ["<C-[>"] = { "<cmd>cprevious<CR>", "prev item" },
     ["<C-\\>"] = { "<cmd>copen<CR>", "open coc" },
     -- Debugging
-    ["<C-s>"] = { ":lua require('dap').step_over()<CR>", "step-over" },
-    ["<C-S-s>"] = { ":lua require('dap').step_into()<CR>", "step-into" },
-    ["<C-a>"] = { ":lua require('dap').step_out()<CR>", "step-out" },
-    ["<C-c>"] = { ":lua require('dap').continue()<CR>", "step-out" },
-    ["<C-S-c>"] = { ":lua require('dap').close()<CR>", "step-out" },
+    -- ["<c-s>"] = { ":lua require('dap').step_over()<cr>", "step-over" },
+    -- ["<c-s-s>"] = { ":lua require('dap').step_into()<cr>", "step-into" },
+    -- ["<c-a>"] = { ":lua require('dap').step_out()<cr>", "step-out" },
+    -- ["<c-c>"] = { ":lua require('dap').continue()<cr>", "step-out" },
+    -- ["<c-s-c>"] = { ":lua require('dap').close()<cr>", "step-out" },
 
     -- lsp
     g = {
@@ -68,8 +68,8 @@ wk.register({
         q = { "<cmd>lua Modal('marks')<cr>", "marks" },
         m = { "<cmd>lua Modal('man_pages')<cr>", "man" },
         o = { "<cmd>lua Modal('vim_options')<cr>", "vim options" },
-        r = {"<cmd>RoamOpenId<cr>", "roam-goto-id"},
-        v = {"<cmd>lua Toggle_venn()<CR>", "toggle-venn"}
+        r = { "<cmd>RoamOpenId<cr>", "roam-goto-id" },
+        v = { "<cmd>lua Toggle_venn()<CR>", "toggle-venn" },
     },
     b = {
         name = "buffers",
@@ -97,8 +97,8 @@ wk.register({
         a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "actions" },
         e = {
             name = "+errors",
-            d = { "<cmd>Trouble document_diagnostics<cr>", "document" },
-            w = { "<cmd>Trouble workspace_diagnostics<cr>", "workspace" },
+            d = { "<cmd>Trouble diagnostics<cr>", "document" },
+            w = { "<cmd>Trouble diagnostics<cr>", "workspace" },
         },
         q = { "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", "loc-list" },
         f = { "<cmd>lua vim.lsp.buf.format { async = false }<CR>", "format" },
@@ -173,7 +173,6 @@ wk.register({
         m = { "<cmd>lua Modal('keymaps')<cr>", "keymaps" },
         t = { "<cmd>lua Modal('colorscheme')<cr>", "colorscheme" },
     },
-    j = { "<cmd>call VimuxSendCtrlKey('r')<cr>", "Ctrl-r" },
     l = {
         name = "lsp",
         i = { "<cmd>LspInstall<CR> ", "install" },
@@ -183,10 +182,10 @@ wk.register({
     },
     m = {
         name = "marks",
-        m={"<cmd>lua require('dirmark').open(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
-        a={"<cmd>lua require('dirmark').mark_cwd()<cr>", "add cwd" },
-        e={"<cmd>lua require('dirmark').open_marks_file()<cr>", "dir marks file" },
-        r={"<cmd>lua require('roam').search(require('telescope.themes').get_ivy())<cr>", "roam" },
+        m = { "<cmd>lua require('dirmark').open(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
+        a = { "<cmd>lua require('dirmark').mark_cwd()<cr>", "add cwd" },
+        e = { "<cmd>lua require('dirmark').open_marks_file()<cr>", "dir marks file" },
+        r = { "<cmd>lua require('roam').search(require('telescope.themes').get_ivy())<cr>", "roam" },
     },
     n = {
         name = "open",
@@ -212,14 +211,16 @@ wk.register({
         Q = { "<cmd>qa!<cr>", "quit all forced" },
     },
     r = {
-        name = "repl",
-        e = { "<cmd>@:<cr>", "last command"},
+        name = "repl/repeat",
+        e = { "<cmd>@:<cr>", "vim-last" },
         t = { "<cmd>VimuxTogglePane<cr>", "toggle" },
         o = { "<cmd>VimuxOpenRunner<cr>", "open" },
         k = { "<cmd>VimuxCloseRunner<cr>", "kill" },
-        c = { "<cmd>VimuxPromptCommand<cr>", "cmd-prompt" },
-        r = { "<cmd>VimuxRunLastCommand<cr>", "last-command" },
-        d = { "<cmd>VimuxCloseRunner<cr>", "last-command" },
+        c = { "<cmd>VimuxPromptCommand<cr>", "prompt" },
+        r = { "<cmd>VimuxRunLastCommand<cr>", "run-last" },
+        d = { "<cmd>VimuxCloseRunner<cr>", "close" },
+        i = { "<cmd>VimuxInterruptRunner<cr>", "interrupt" },
+
         s = { "vip:<C-U>REPLSendLines<cr><esc>%", "send-paragraph" },
         a = { "ggVG:<C-U>REPLSendLines<cr><esc>", "send-all" },
     },
@@ -233,9 +234,10 @@ wk.register({
         z = { "<cmd>ZenMode<cr>", "zen" },
         l = { "<cmd>set nu! rnu!<cr>", "line-numbers" },
         L = { "<cmd>set nu rnu!<cr>", "line-numbers" },
-        w = { "<cmd>set wrap!<cr>", "word-wrap" },
+        w = { "<cmd>set wrap!<cr>", "wrap" },
         i = { "<cmd>IBLToggle<cr>", "indent" },
         h = { "<cmd>lua Modal('colorscheme')<cr>", "colorscheme" },
+        d = { "<cmd>lua require('dapui').toggle()<cr>", "debug" },
         b = {
             name = "background",
             l = { "<cmd><cmd>colorscheme leuven<cr>", "light" },
@@ -271,12 +273,13 @@ wk.register({
     },
     x = {
         name = "trouble",
-        x = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "document" },
-        w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "workspace" },
-        d = { "<cmd>TroubleToggle document_diagnostics<cr>", "document" },
-        q = { "<cmd>TroubleToggle quickfix<cr>", "quickfix" },
-        l = { "<cmd>TroubleToggle loclist<cr>", "loclist" },
-        s = { "<cmd>source %<cr>", "source" },
+
+        x = { "<cmd>Trouble diagnostics toggle focus=true filter.buf=0<cr>", "document" },
+        w = { "<cmd>Trouble toggle diagnostics focus=true<cr>", "workspace" },
+        d = { "<cmd>Trouble toggle diagnostics<cr>", "document" },
+        q = { "<cmd>Trouble toggle quickfix<cr>", "quickfix" },
+        l = { "<cmd>Trouble toggle lclist<cr>", "loclist" },
+        s = { "<cmd>Trouble symbols<cr>", "symbols" },
     },
     y = {
         name = "yank",
@@ -287,13 +290,13 @@ wk.register({
         k = { "<Plug>(YankyCycleBackward)", "previous yank" },
     },
     ["`"] = {
-        name="terminal",
-        ['`'] = {'<cmd>ToggleTerm<cr>', 'toggle'},
-        c = { '<cmd>lua require("toggleterm.terminal").Terminal:new({}).toggle()', "create-new"},
-        f = { '<cmd>ToggleTerm direction="float"<cr>', 'toggle-float'},
-        v = { '<cmd>ToggleTerm direction="vertical"<cr>', 'term-vertical'},
-        h = { '<cmd>ToggleTerm direction="horizontal"<cr>', 'term-horisontal'},
-        l = { '<cmd>ToggleTermSendCurrentLine<cr>', 'send-line'},
+        name = "terminal",
+        ['`'] = { '<cmd>ToggleTerm<cr>', 'toggle' },
+        c = { '<cmd>lua require("toggleterm.terminal").Terminal:new({}).toggle()', "create-new" },
+        f = { '<cmd>ToggleTerm direction="float"<cr>', 'toggle-float' },
+        v = { '<cmd>ToggleTerm direction="vertical"<cr>', 'term-vertical' },
+        h = { '<cmd>ToggleTerm direction="horizontal"<cr>', 'term-horisontal' },
+        l = { '<cmd>ToggleTermSendCurrentLine<cr>', 'send-line' },
     },
 
     ["<Tab>"] = {
@@ -306,29 +309,31 @@ wk.register({
     },
     ["<leader>"] = { "<cmd>lua Modal('find_files')<cr>", "find files" },
     ["<enter>"] = { "<cmd>lua Modal('command_history')<cr>", "commands" },
-}, { prefix = "<leader>", mode="n"})
+}, { prefix = "<leader>", mode = "n" })
 
 wk.register({
-    K = { "<cmd>m '<-2<CR>gv=gv", "move selection up" },
-    J = { "<cmd>m '>+1<CR>gv=gv", "move selection down" },
-    f = { "<cmd><,>VBox<CR>", "box-surround"},
+    f = { "<cmd><,>VBox<CR>", "box-surround" },
     ["<leader>"] = {
+        y = { '"+y', "copy" }, -- copy to system clipboard
         c = { "<Plug>(comment_toggle_linewise_visual)", "comment" },
         r = { ":<C-U>REPLSendLines<cr>", "send-to-repl" },
-        s = { '<cmd>ToggleTermSendVisualLines<cr>', 'send-visual'},
+        s = { '<cmd>ToggleTermSendVisualLines<cr>', 'send-visual' },
         S = { ":<C-U>sort<cr>", "sort" },
-        y = { '"+y', "copy" }, -- copy to system clipboard
+        ["el"] = { ':<C-u>call EvalLuaSelection()<CR>', "eval-lua" },
     },
 }, { mode = "v" })
 
 wk.register({
-    ["<M-j>"] = { "<cmd>m .+1<cr>==", "move-line-down" },
-    ["<M-k>"] = { "<cmd>m .-2<cr>==", "move-line-up" },
-    ["<M-o>"] = { "<cmd>DapStepOut<CR>" },
-    ["<M-s>"] = { "<cmd>DapStepOver<CR>" },
-    ["<C-s>"] = { "<cmd>DapTerminate<CR>" },
-    ["<M-d>"] = { "<cmd>DapToggleBreakpoint<CR>" },
-    ["<M-c>"] = { "<cmd>DapContinue<CR>" },
+    ["<C-w>"] = {
+        b = { "<cmd>lua ToggleWinBar()<cr>", "win-bar" }
+    },
+    ["<M-d>"] = { ":DapToggleBreakpoint<CR>", "bp-toggle" },
+    ["<M-s>"] = { ":lua require('dap').step_over()<cr>", "step-over" },
+    ["<M-o>"] = { ":lua require('dap').step_out()<cr>", "step-out" },
+    ["<M-i>"] = { ":lua require('dap').step_into()<cr>", "step-into" },
+    ["<M-l>"] = { "<cmd>set nu! rnu!<cr>", "line-numbers" },
+    ["<M-c>"] = { ":lua require('dap').continue()<cr>", "continue" },
+    ["<M-S-c>"] = { ":lua require('dap').close()<cr>", "close" },
 }, { mode = "n" })
 
 -- custom orgmode goto definition
@@ -340,7 +345,7 @@ api.nvim_create_autocmd({
     pattern = "*.org",
     callback = function()
         keymap.set('n', 'gd', function()
-            local  roam = require("org-roam")
+            local roam = require("org-roam")
             roam.goto_id()
         end)
     end,
