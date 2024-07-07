@@ -4,7 +4,7 @@ local keymap = vim.keymap
 
 local wk = require("which-key")
 function Modal(name, ...)
-    require("telescope.builtin")[name](require("telescope.themes").get_ivy(...))
+    require("telescope.builtin")[name](...)
 end
 
 -- Copilot swap tab since compe takes the tab key
@@ -69,7 +69,6 @@ wk.register({
         m = { "<cmd>lua Modal('man_pages')<cr>", "man" },
         o = { "<cmd>lua Modal('vim_options')<cr>", "vim options" },
         r = { "<cmd>RoamOpenId<cr>", "roam-goto-id" },
-        v = { "<cmd>lua Toggle_venn()<CR>", "toggle-venn" },
     },
     b = {
         name = "buffers",
@@ -182,10 +181,10 @@ wk.register({
     },
     m = {
         name = "marks",
-        m = { "<cmd>lua require('dirmark').open(require('telescope.themes').get_dropdown())<cr>", "dir mark" },
+        m = { "<cmd>lua require('dirmark').open()<cr>", "dir mark" },
         a = { "<cmd>lua require('dirmark').mark_cwd()<cr>", "add cwd" },
         e = { "<cmd>lua require('dirmark').open_marks_file()<cr>", "dir marks file" },
-        r = { "<cmd>lua require('roam').search(require('telescope.themes').get_ivy())<cr>", "roam" },
+        r = { "<cmd>lua require('roam').search()<cr>", "roam" },
     },
     n = {
         name = "open",
@@ -234,10 +233,12 @@ wk.register({
         z = { "<cmd>ZenMode<cr>", "zen" },
         l = { "<cmd>set nu! rnu!<cr>", "line-numbers" },
         L = { "<cmd>set nu rnu!<cr>", "line-numbers" },
+        ["."] = { "<cmd>set list!<cr>", "special-chars" },
         w = { "<cmd>set wrap!<cr>", "wrap" },
         i = { "<cmd>IBLToggle<cr>", "indent" },
         h = { "<cmd>lua Modal('colorscheme')<cr>", "colorscheme" },
         d = { "<cmd>lua require('dapui').toggle()<cr>", "debug" },
+        v = { "<cmd>lua Toggle_venn()<CR>", "toggle-venn" },
         b = {
             name = "background",
             l = { "<cmd><cmd>colorscheme leuven<cr>", "light" },

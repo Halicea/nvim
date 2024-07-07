@@ -47,7 +47,7 @@ o.foldlevel = 99
 o.foldenable = false
 o.foldmethod = "indent"
 
-o.list=true
+o.list=false
 o.listchars:append({eol="↵"})
 o.conceallevel = 2
 o.concealcursor = "nc"

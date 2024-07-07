@@ -117,16 +117,18 @@ local nav_helpers = {
     { 'akinsho/toggleterm.nvim' },
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.4',
         event = "VeryLazy",
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require("telescope").load_extension("dap")
             require("telescope").load_extension("emoji")
-            require("telescope").setup({
+            require("telescope").setup {
                 defaults = {
+                    border = false,
+                    layout_strategy = "bottom_pane",
                     layout_config = {
-                        vertical = { height = 0.3 },
+                        prompt_position = "bottom",
+                        height = 15,
                     },
                 },
                 pickers = {
@@ -143,7 +145,7 @@ local nav_helpers = {
                         },
                     },
                 },
-            })
+            }
         end,
     },
     { "nvim-tree/nvim-tree.lua",   config = function() require("nvim-tree").setup({}) end },

@@ -1,3 +1,5 @@
+# This README does not reflect reality 
+Since i'm changing my config from time to time and dont have cycles to update this document for every change, SO THE SOURCE IS THE TRUTH.
 # Neovim config
 
 After a long time resisting to re-write my config in `Lua`, before the end of

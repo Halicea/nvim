@@ -1,109 +1,103 @@
-local bind_lsp_keys = function(client, bufnr)
-    local opts = { noremap = true, silent = false }
-    local function buf_set_keymap(...)
-        vim.api.nvim_buf_set_keymap(bufnr, ...)
-    end
+vim.api.nvim_create_autocmd('LspAttach', {
+    desc = 'LSP actions',
+    callback = function(event)
+        local opts = { buffer = event.buf }
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        if client == nil then
+            return
+        end
 
-    local function buf_set_option(...)
-        vim.api.nvim_buf_set_option(bufnr, ...)
-    end
-    buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+        if client.server_capabilities.signatureHelpProvider then
+            require("lsp-overloads").setup(client, {})
+        end
+        -- these will be buffer-local keybindings
+        -- because they only work if you have an active language server
+
+        vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+
     if client.name == "omnisharp" then
         --Enable completion triggered by <c-x><c-o>
-        buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-        buf_set_keymap("n", "gd", "<cmd>lua require('omnisharp_extended').lsp_definitions()<cr>", opts)
+        vim.api.nvim_buf_set_option(opts.buffer, "omnifunc", "v:lua.vim.lsp.omnifunc")
+        vim.keymap.set("n", "gd", "<cmd>lua require('omnisharp_extended').lsp_definitions()<cr>", opts)
     else
-        buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        vim.keymap.set("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
     end
-    buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-    buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-    buf_set_keymap("n", "<space>ch", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-    buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-    buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-    buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-    buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-    buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-    buf_set_keymap("n", "<space>cq", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
-    buf_set_keymap("n", "<space>cf", "<cmd>lua vim.lsp.buf.format { async = cf }<CR>", opts)
+        vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+        vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+        vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+        vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+        vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+        vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+        vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+    end
+})
+
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+local default_setup = function(server)
+    require('lspconfig')[server].setup({
+        handlers = {
+            ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
+                border = 'rounded',
+            }),
+        },
+        capabilities = lsp_capabilities,
+    })
 end
 
-vim.api.nvim_create_autocmd("LspAttach", {
-    desc = "LSP Actions",
-    callback = function(ev)
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        local bufnr = ev.buf
-        if client ~= nil then
-            if client.server_capabilities.signatureHelpProvider then
-                require("lsp-overloads").setup(client,{})
-            end
+require('mason').setup({})
+require('mason-lspconfig').setup({
+    ensure_installed = {},
+    handlers = {
+        default_setup,
+        omnisharp = function()
+            require('lspconfig').omnisharp.setup({
+                capabilities = lsp_capabilities,
+                handlers = {
+                    ["textDocument/definition"] = require("omnisharp_extended").handler,
+                }
+            })
+        end,
+        lua_ls = function()
+            require('lspconfig').lua_ls.setup({
+                capabilities = lsp_capabilities,
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = "LuaJIT",
+                        },
+                        diagnostics = {
+                            globals = { 'vim' },
+                        },
+                        workspace = {
+                            -- Make the server aware of Neovim runtime files
+                            library = vim.api.nvim_get_runtime_file("", true),
+                        },
+                    },
+                },
+            })
+        end,
+        yamlls = function()
+            require('lspconfig').yamlls.setup({
+                capabilities = lsp_capabilities,
+                settings = {
+                    customTags = { "!reference" },
+                }
+            })
+        end,
 
-            bind_lsp_keys(client, bufnr)
+        powershell_es = function()
+            require('lspconfig').powershell_es.setup({
+                capabilities = lsp_capabilities,
+                settings = {
+                    bundle_path = '/home/halicea/.local/share/nvim/mason/packages/powershell-editor-services'
+                },
+            })
         end
-    end,
+    },
 })
-
-local lspconfig = require("lspconfig")
-local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-
-require("mason").setup({})
-require("mason-lspconfig").setup({})
-require("mason-lspconfig").setup_handlers({
-    function(server)
-        local config = { capabilities = lsp_capabilities }
-        config.handlers = {
-            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-                border = "rounded",
-            }),
-        }
-        if (server == "omnisharp") then
-            config.handlers["textDocument/definition"] = require("omnisharp_extended").handler
-            lspconfig[server].setup(config)
-        end
-
-        config.settings = {
-            Lua = {
-                runtime = {
-                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                    version = "LuaJIT",
-                },
-                diagnostics = {
-                    -- Get the language server to recognize the `vim` global
-                    globals = { "vim" },
-                },
-                workspace = {
-                    -- Make the server aware of Neovim runtime files
-                    library = vim.api.nvim_get_runtime_file("", true),
-                },
-                -- Do not send telemetry data containing a randomized but unique identifier
-                telemetry = {
-                    enable = false,
-                },
-            },
-            yaml = {
-                customTags = { "!reference" }
-            },
-        }
-        lspconfig[server].setup(config)
-    end
-})
-
-
-lspconfig["powershell_es"].setup({
-    bundle_path = '/home/halicea/.local/share/nvim/mason/packages/powershell-editor-services'
-})
--- require("roslyn").setup({
---     dotnet_cmd = "dotnet", -- this is the default
---     roslyn_version = "4.8.0-3.23475.7", -- this is the default
---     on_attach = function (client, bufnr)
---         bind_lsp_keys(client, bufnr)
---     end, -- required
---     capabilities = lsp_capabilities, -- required
--- })
-
 
 -- completion
 local cmp = require('cmp')

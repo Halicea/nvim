@@ -26,10 +26,7 @@ WinBar = '%f%m%r%q%y%=#[%l,%c] %L|%P  '
 WinbarActive = false
 o.winbar = ''
 
-
 o.ch = 1
 o.showmode = true
 o.showcmd= true
-
 o.laststatus = 0
-vim.opt.statusline = string.rep('─', vim.api.nvim_win_get_width(0))
