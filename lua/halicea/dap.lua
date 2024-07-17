@@ -1,8 +1,8 @@
 local dap = require("dap")
 local fn = vim.fn
 
-fn.sign_define("DapBreakpoint", { text = "🧅", texthl = "", linehl = "red", numhl = "" })
-fn.sign_define("DapStopped", { text = "🥝", texthl = "", linehl = "green", numhl = "" })
+fn.sign_define("DapBreakpoint", { text = "🧅", texthl = "red", linehl = "red", numhl = "" })
+fn.sign_define("DapStopped", { text = "🥝", texthl = "red", linehl = "red", numhl = "" })
 
 
 local setupNode = function()

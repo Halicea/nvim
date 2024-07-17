@@ -1,82 +1,95 @@
 -- Evaluate lua code in visual selection
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+	[[
 function! EvalLuaSelection()
     normal! `<v`>y
     let l:code = @"
     execute 'lua ' . l:code
 endfunction
-]], false)
+]],
+	false
+)
 
 function Toggle_venn()
-    local venn_enabled = vim.inspect(vim.b.venn_enabled)
-    if venn_enabled == "nil" then
-        vim.b.venn_enabled = true
-        vim.cmd[[setlocal ve=all]]
-        -- draw a line on HJKL keystokes
-        vim.api.nvim_buf_set_keymap(0, "n", "J", "<C-v>j:VBox<CR>", {noremap = true})
-        vim.api.nvim_buf_set_keymap(0, "n", "K", "<C-v>k:VBox<CR>", {noremap = true})
-        vim.api.nvim_buf_set_keymap(0, "n", "L", "<C-v>l:VBox<CR>", {noremap = true})
-        vim.api.nvim_buf_set_keymap(0, "n", "H", "<C-v>h:VBox<CR>", {noremap = true})
-        -- draw a box by pressing "f" with visual selection
-        vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", {noremap = true})
-        print("Venn enabled")
-    else
-        vim.cmd[[setlocal ve=]]
-        vim.api.nvim_buf_del_keymap(0, "n", "J")
-        vim.api.nvim_buf_del_keymap(0, "n", "K")
-        vim.api.nvim_buf_del_keymap(0, "n", "L")
-        vim.api.nvim_buf_del_keymap(0, "n", "H")
-        vim.api.nvim_buf_del_keymap(0, "v", "f")
-        vim.b.venn_enabled = nil
-        print("Venn disabled")
-    end
+	local venn_enabled = vim.inspect(vim.b.venn_enabled)
+	if venn_enabled == "nil" then
+		vim.b.venn_enabled = true
+		vim.cmd([[setlocal ve=all]])
+		-- draw a line on HJKL keystokes
+		vim.api.nvim_buf_set_keymap(0, "n", "J", "<C-v>j:VBox<CR>", { noremap = true })
+		vim.api.nvim_buf_set_keymap(0, "n", "K", "<C-v>k:VBox<CR>", { noremap = true })
+		vim.api.nvim_buf_set_keymap(0, "n", "L", "<C-v>l:VBox<CR>", { noremap = true })
+		vim.api.nvim_buf_set_keymap(0, "n", "H", "<C-v>h:VBox<CR>", { noremap = true })
+		-- draw a box by pressing "f" with visual selection
+		vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", { noremap = true })
+		print("Venn enabled")
+	else
+		vim.cmd([[setlocal ve=]])
+		vim.api.nvim_buf_del_keymap(0, "n", "J")
+		vim.api.nvim_buf_del_keymap(0, "n", "K")
+		vim.api.nvim_buf_del_keymap(0, "n", "L")
+		vim.api.nvim_buf_del_keymap(0, "n", "H")
+		vim.api.nvim_buf_del_keymap(0, "v", "f")
+		vim.b.venn_enabled = nil
+		print("Venn disabled")
+	end
 end
 
 function GetOS()
-    return package.config:sub(1, 1) == "\\" and "win" or "unix"
+	return package.config:sub(1, 1) == "\\" and "win" or "unix"
 end
 
 --- When debugging I want the winbar to be hidden because it creates a lot of text in the windows, i dont need it.
-function ToggleWinBar()
-    if not WinbarActive then
-        WinbarActive = true
-        vim.opt.winbar = WinBar
-        vim.opt.laststatus = 0
-        vim.opt.statusline = string.rep('─', vim.api.nvim_win_get_width(0))
-    else
-        WinbarActive = false
-        vim.opt.winbar = ''
-        vim.opt.statusline = ''
-        vim.opt.laststatus = 3
-    end
+WinbarActive = false
+WinBar = "%f%m%r%q%y%=#[%l,%c] %L|%P  "
+
+vim.cmd([[ command! ShowWinBar :lua ShowWinBar() ]])
+function ShowWinBar()
+	WinbarActive = true
+	vim.opt.winbar = WinBar
+	vim.opt.laststatus = 0
+	vim.opt.statusline = string.rep("─", vim.api.nvim_win_get_width(0))
 end
 
--- create copy buffer command
-vim.cmd([[
-    command! CopyBufferPath :lua CopyBufferPath()
-]])
+vim.cmd([[ command! HideWinBar :lua HideWinBar() ]])
+function HideWinBar()
+	WinbarActive = false
+	vim.opt.winbar = ""
+	vim.opt.statusline = ""
+	vim.opt.laststatus = 3
+end
+
+vim.cmd([[ command! ToggleWinBar :lua ToggleWinBar() ]])
+function ToggleWinBar()
+	if not WinbarActive then
+		ShowWinBar()
+	else
+		HideWinBar()
+	end
+end
+
+vim.cmd([[ command! CopyBufferPath :lua CopyBufferPath() ]])
 function CopyBufferPath()
-    local path = vim.fn.expand('%:p')
-    vim.fn.setreg('+', path)
-    vim.fn.setreg('"', path)
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	vim.fn.setreg('"', path)
 end
 
 -- set shell to pwsh on windows
 if GetOS() == "win" then
-    local powershell_options = {
-        shell = vim.fn.executable "pwsh" and "pwsh" or "powershell",
-        shellcmdflag =
-        "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
-        shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
-        shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
-        shellquote = "",
-        shellxquote = "",
-    }
+	local powershell_options = {
+		shell = vim.fn.executable("pwsh") and "pwsh" or "powershell",
+		shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
+		shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
+		shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
+		shellquote = "",
+		shellxquote = "",
+	}
 
-    for option, value in pairs(powershell_options) do
-        vim.opt[option] = value
-    end
-    vim.cmd([[
+	for option, value in pairs(powershell_options) do
+		vim.opt[option] = value
+	end
+	vim.cmd([[
         let &shell="c:/users/administrator/.dotnet/tools/pwsh.exe"
     ]])
 end
